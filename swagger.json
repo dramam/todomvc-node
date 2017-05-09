@@ -1,0 +1,529 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2017-02-01T03:37:55Z",
+    "title": "REST API for TodoMVC"
+  },
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/todos": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/todos"
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
+          "responses": {
+            "BAD.*": {
+              "statusCode": "400"
+            },
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,x-api-key,x-amz-security-token'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "$input.json('$.body')"
+              }
+            },
+            "INT.*": {
+              "statusCode": "500"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\"}"
+          },
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Access-Control-Allow-Origin",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Amz-Security-Token",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Auth",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "x-auth": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.x-auth": "integration.response.body.Auth",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token,x-auth'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "$input.json('$.body')"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\"}"
+          },
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "options": {
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Methods": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Methods": "'POST,GET,OPTIONS'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Auth'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
+        }
+      }
+    },
+    "/todos/{id}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Access-Control-Allow-Origin",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Amz-Security-Token",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Auth",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/todoItem"
+            },
+            "headers": {
+              "x-auth": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          },
+          "401": {
+            "description": "401 response"
+          },
+          "405": {
+            "description": "405 response"
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
+          "responses": {
+            "BAD.*": {
+              "statusCode": "400"
+            },
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.x-auth": "integration.response.body.Auth",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token,x-auth'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "$input.json('$.body')"
+              }
+            },
+            "INT.*": {
+              "statusCode": "500"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
+          },
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Access-Control-Allow-Origin",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Amz-Security-Token",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/todoItem"
+            },
+            "headers": {
+              "x-auth": {
+                "type": "string"
+              },
+              "Access-Control-Expose-Headers": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "400 response"
+          },
+          "401": {
+            "description": "401 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
+            }
+          },
+          "405": {
+            "description": "405 response"
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
+          "responses": {
+            "Unauthorized*": {
+              "statusCode": "401",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              }
+            },
+            "BAD.*": {
+              "statusCode": "400"
+            },
+            "INT.*": {
+              "statusCode": "500"
+            },
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Expose-Headers": "'x-auth'",
+                "method.response.header.x-auth": "integration.response.body.Auth",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token,x-auth'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "$input.json('$.body')"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
+          },
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Access-Control-Allow-Origin",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "x-auth": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "400 response"
+          },
+          "401": {
+            "description": "401 response"
+          },
+          "405": {
+            "description": "405 response"
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
+          "responses": {
+            "BAD.*": {
+              "statusCode": "400"
+            },
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.x-auth": "integration.response.body.Auth",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "$input.json('$.body')"
+              }
+            },
+            "INT.*": {
+              "statusCode": "500"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
+          },
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "options": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Methods": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,OPTIONS,PUT'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Auth'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "todos": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/todoItem"
+      }
+    },
+    "todoItem": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": ""
+        },
+        "text": {
+          "type": "string",
+          "description": ""
+        },
+        "completed": {
+          "type": "boolean",
+          "description": ""
+        }
+      }
+    }
+  }
+}

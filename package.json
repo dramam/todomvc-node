@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dramam/todomvc-node.git"
@@ -24,7 +21,14 @@
     "feathers-rest": "^1.7.2",
     "feathers-sequelize": "^2.0.0",
     "path": "^0.12.7",
-    "sequelize": "^3.30.4",
-    "sqlite": "^2.7.0"
+    "sequelize": "^3.30.4"
+  },
+  "scripts": {
+    "sqlite-local": "npm uninstall sqlite3; npm install sqlite3",
+    "sqlite-lambda": "npm uninstall sqlite3; npm install sqlite3 --build-from-source --target=0.10.36 --target_arch=x64 --target_platform=linux"
+  },
+  "devDependencies": {
+    "feathers-swagger": "^0.4.0",
+    "node-fetch": "^1.6.3"
   }
 }
