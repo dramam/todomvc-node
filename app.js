@@ -3,43 +3,42 @@ var rest = require('feathers-rest');
 var bodyParser = require('body-parser');
 var Sequelize = require('sequelize');
 var service = require('feathers-sequelize');
-const hooks = require('feathers-hooks');
-const errors = require('feathers-errors');
+var hooks = require('feathers-hooks');
+var errors = require('feathers-errors');
+var config = require('config');
+var AWS = require('aws-sdk');
 
 var serverReady = false;
 
-const dbconfig = {
-  dbname: '',
-  username: '',
-  password: '',
-  host: '',
-  port: '3306',
-  dialect: 'mysql' 
-};
-const sequelize = new Sequelize(
-  dbconfig.dbname, dbconfig.username, dbconfig.password, {
-  host: dbconfig.host,
-  port: dbconfig.port,
-  dialect: dbconfig.dialect
-});
-
 // Todo Model
-const Todo = sequelize.define('todo', {
-  text: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  completed: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  }
-}, {
-  freezeTableName: true
-});
+var Todo = {};
+var app = {};
+var dbconfig = {};
 
-function init() {
+var getConfig = function() {
+  console.log('getConfig');
+  var s3 = new AWS.S3();
+  return new Promise(function(resolve,reject) {
+    console.log('s3.getobject');
+    console.log(config);
+    s3.getObject({Bucket: config.bucket , Key: config.key},
+      function(err, data) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        dbconfig = JSON.parse(data.Body).db;
+        console.log(dbconfig);
+        resolve(dbconfig);
+      }
+    );
+  });
+}
+
+var init = function() {
+  console.log('init');
   // Create a feathers instance.
-  const app = feathers()
+  app = feathers()
     // Enable REST services
     .configure(rest())
     .configure(hooks())
@@ -53,6 +52,30 @@ function init() {
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
           });
+  try {
+    var sequelize = new Sequelize(
+      dbconfig.dbname, dbconfig.username, dbconfig.password, {
+      host: dbconfig.host,
+      port: dbconfig.port,
+      dialect: dbconfig.dialect
+    });
+    console.log('Todo');
+    Todo = sequelize.define('todo', {
+      text: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      completed: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      }
+    }, {
+      freezeTableName: true
+    });
+    console.log('done init');
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 exports.handler = function _f(event, context) {
@@ -63,6 +86,7 @@ exports.handler = function _f(event, context) {
     json: true
   };
   reqopts.uri = reqopts.uri.replace('{id}', event.id);
+  console.log(reqopts);
   var sendReq = function _sendReq() {
     rp(reqopts)
     .then(function _then(body) {
@@ -73,30 +97,42 @@ exports.handler = function _f(event, context) {
     });
   };
   if (!serverReady) {
-    init();
-    Todo.sync()
-    .then(function _then() {
-      // Create an sqlite backed Feathers service
-      app.use('/todos', service({
-        Model: Todo
-      }));
-      // Add error hook
-      const todos = app.service('/todos');
-      // Log error on all methods
-      todos.hooks({
-        error(hook) {
-          console.error('Todo service error', hook.error);
-        }
-      });
-      app.listen(3000, function() {
-        console.log(`Feathers server listening on port 3000`);
-        serverReady = true;
-        if (event.resource) {
-          sendReq();
-        }
-      });
-    });
+    console.log('serverReady');
+    try {
+      getConfig().then(function(data) {
+        console.log('after getConfig');
+        init();
+        console.log('after init');
+        Todo.sync()
+        .then(function _then() {
+          console.log('hooks');
+          // Create an sqlite backed Feathers service
+          app.use('/todos', service({
+            Model: Todo
+          }));
+          // Add error hook
+          var todos = app.service('/todos');
+          // Log error on all methods
+          todos.hooks({
+            error(hook) {
+              console.error('Todo service error', hook.error);
+            }
+          });
+          console.log('listen');
+          app.listen(3000, function() {
+            console.log(`Feathers server listening on port 3000`);
+            serverReady = true;
+            if (event.resource) {
+              sendReq();
+            }
+          });
+        });
+      })
+    } catch (err) {
+      console.log(err);
+    }
   } else {
+    console.log('true');
     if (event.resource) {
       sendReq();
     } else {

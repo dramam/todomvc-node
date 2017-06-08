@@ -14,7 +14,9 @@
   },
   "homepage": "https://github.com/dramam/todomvc-node#readme",
   "dependencies": {
+    "aws-sdk": "^2.62.0",
     "body-parser": "^1.17.1",
+    "config": "^1.26.1",
     "feathers": "^2.1.1",
     "feathers-errors": "^2.7.1",
     "feathers-hooks": "^2.0.1",

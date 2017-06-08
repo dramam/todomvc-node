@@ -33,7 +33,6 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
           "responses": {
             "BAD.*": {
               "statusCode": "400"
@@ -55,7 +54,7 @@
           "requestTemplates": {
             "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\"}"
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -128,7 +127,7 @@
           "requestTemplates": {
             "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\"}"
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "uri":"{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -240,7 +239,6 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
           "responses": {
             "BAD.*": {
               "statusCode": "400"
@@ -263,7 +261,7 @@
           "requestTemplates": {
             "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -340,7 +338,6 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
           "responses": {
             "Unauthorized*": {
               "statusCode": "401",
@@ -424,7 +421,6 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "credentials": "arn:aws:iam::137316275239:role/mugenLambda",
           "responses": {
             "BAD.*": {
               "statusCode": "400"
