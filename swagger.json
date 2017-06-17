@@ -259,7 +259,7 @@
             }
           },
           "requestTemplates": {
-            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$input.params('id')\"}"
           },
           "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
@@ -365,7 +365,7 @@
             }
           },
           "requestTemplates": {
-            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\", \n  \"body\": $input.json('$')}"
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$input.params('id')\", \n  \"body\": $input.json('$')}"
           },
           "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
@@ -441,7 +441,7 @@
             }
           },
           "requestTemplates": {
-            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$input.params('id')\"}"
           },
           "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
