@@ -125,9 +125,9 @@
             }
           },
           "requestTemplates": {
-            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\"}"
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"body\": $input.json('$')}"
           },
-          "uri":"{{apiEndpointUri}}",
+          "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -365,9 +365,9 @@
             }
           },
           "requestTemplates": {
-            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\", \n  \"body\": $input.json('$')}"
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -443,7 +443,7 @@
           "requestTemplates": {
             "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\", \n  \"id\": \"$util.escapeJavaScript($input.json('$.id'))\"}"
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:137316275239:function:todomvc/invocations",
+          "uri": "{{apiEndpointUri}}",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",

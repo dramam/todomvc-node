@@ -7,6 +7,7 @@ var hooks = require('feathers-hooks');
 var errors = require('feathers-errors');
 var config = require('config');
 var AWS = require('aws-sdk');
+var rp = require('request-promise');
 
 var serverReady = false;
 
@@ -21,7 +22,13 @@ var getConfig = function() {
   return new Promise(function(resolve,reject) {
     console.log('s3.getobject');
     console.log(config);
-    s3.getObject({Bucket: config.bucket , Key: config.key},
+    var bucket = process.env.TufanExchange || config.bucket;
+    var path = process.env.xchangePath;
+    var key = path + '/' + config.key;
+    console.log('Bucket - ' + bucket);
+    console.log('path - ' + path);
+    console.log('key - ' + key);
+    s3.getObject({Bucket: bucket , Key: key},
       function(err, data) {
         if (err) {
           console.log(err);
@@ -97,7 +104,7 @@ exports.handler = function _f(event, context) {
     });
   };
   if (!serverReady) {
-    console.log('serverReady');
+    console.log('serverReady false');
     try {
       getConfig().then(function(data) {
         console.log('after getConfig');
