@@ -8,6 +8,7 @@ var errors = require('feathers-errors');
 var config = require('config');
 var AWS = require('aws-sdk');
 var rp = require('request-promise');
+var migrate = require('./migrate.js');
 
 var serverReady = false;
 
@@ -103,47 +104,52 @@ exports.handler = function _f(event, context) {
       context.fail(err);
     });
   };
-  if (!serverReady) {
-    console.log('serverReady false');
-    try {
-      getConfig().then(function(data) {
-        console.log('after getConfig');
-        init();
-        console.log('after init');
-        Todo.sync()
-        .then(function _then() {
-          console.log('hooks');
-          // Create an sqlite backed Feathers service
-          app.use('/todos', service({
-            Model: Todo
-          }));
-          // Add error hook
-          var todos = app.service('/todos');
-          // Log error on all methods
-          todos.hooks({
-            error(hook) {
-              console.error('Todo service error', hook.error);
-            }
-          });
-          console.log('listen');
-          app.listen(3000, function() {
-            console.log(`Feathers server listening on port 3000`);
-            serverReady = true;
-            if (event.resource) {
-              sendReq();
-            }
-          });
-        });
-      })
-    } catch (err) {
-      console.log(err);
-    }
+  if (event.resource === '/migrate') {
+    init();
+    migrate(app, context);
   } else {
-    console.log('true');
-    if (event.resource) {
-      sendReq();
+    if (!serverReady) {
+      console.log('serverReady false');
+      try {
+        getConfig().then(function(data) {
+          console.log('after getConfig');
+          init();
+          console.log('after init');
+          Todo.sync()
+          .then(function _then() {
+            console.log('hooks');
+            // Create an sqlite backed Feathers service
+            app.use('/todos', service({
+              Model: Todo
+            }));
+            // Add error hook
+            var todos = app.service('/todos');
+            // Log error on all methods
+            todos.hooks({
+              error(hook) {
+                console.error('Todo service error', hook.error);
+              }
+            });
+            console.log('listen');
+            app.listen(3000, function() {
+              console.log(`Feathers server listening on port 3000`);
+              serverReady = true;
+              if (event.resource) {
+                sendReq();
+              }
+            });
+          });
+        })
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-      context.succeed('Done with init');
+      console.log('true');
+      if (event.resource) {
+        sendReq();
+      } else {
+        context.succeed('Done with init');
+      }
     }
   }
 };

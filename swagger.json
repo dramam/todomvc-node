@@ -82,12 +82,6 @@
             "type": "string"
           },
           {
-            "name": "X-Auth",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "Authorization",
             "in": "header",
             "required": false,
@@ -98,9 +92,6 @@
           "200": {
             "description": "200 response",
             "headers": {
-              "x-auth": {
-                "type": "string"
-              },
               "Access-Control-Allow-Origin": {
                 "type": "string"
               },
@@ -115,8 +106,7 @@
             "default": {
               "statusCode": "200",
               "responseParameters": {
-                "method.response.header.x-auth": "integration.response.body.Auth",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token,x-auth'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token'",
                 "method.response.header.Access-Control-Allow-Origin": "'*'"
               },
               "responseTemplates": {
@@ -160,7 +150,7 @@
               "statusCode": "200",
               "responseParameters": {
                 "method.response.header.Access-Control-Allow-Methods": "'POST,GET,OPTIONS'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Auth'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                 "method.response.header.Access-Control-Allow-Origin": "'*'"
               }
             }
@@ -195,12 +185,6 @@
             "type": "string"
           },
           {
-            "name": "X-Auth",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "Authorization",
             "in": "header",
             "required": false,
@@ -220,9 +204,6 @@
               "$ref": "#/definitions/todoItem"
             },
             "headers": {
-              "x-auth": {
-                "type": "string"
-              },
               "Access-Control-Allow-Origin": {
                 "type": "string"
               },
@@ -246,8 +227,7 @@
             "default": {
               "statusCode": "200",
               "responseParameters": {
-                "method.response.header.x-auth": "integration.response.body.Auth",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token,x-auth'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token'",
                 "method.response.header.Access-Control-Allow-Origin": "'*'"
               },
               "responseTemplates": {
@@ -308,9 +288,6 @@
               "$ref": "#/definitions/todoItem"
             },
             "headers": {
-              "x-auth": {
-                "type": "string"
-              },
               "Access-Control-Expose-Headers": {
                 "type": "string"
               },
@@ -354,9 +331,7 @@
             "default": {
               "statusCode": "200",
               "responseParameters": {
-                "method.response.header.Access-Control-Expose-Headers": "'x-auth'",
-                "method.response.header.x-auth": "integration.response.body.Auth",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token,x-auth'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token'",
                 "method.response.header.Access-Control-Allow-Origin": "'*'"
               },
               "responseTemplates": {
@@ -399,9 +374,6 @@
           "200": {
             "description": "200 response",
             "headers": {
-              "x-auth": {
-                "type": "string"
-              },
               "Access-Control-Allow-Origin": {
                 "type": "string"
               },
@@ -428,7 +400,6 @@
             "default": {
               "statusCode": "200",
               "responseParameters": {
-                "method.response.header.x-auth": "integration.response.body.Auth",
                 "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date, Authorization,x-api-key,x-amz-security-token'",
                 "method.response.header.Access-Control-Allow-Origin": "'*'"
               },
@@ -484,7 +455,93 @@
               "statusCode": "200",
               "responseParameters": {
                 "method.response.header.Access-Control-Allow-Methods": "'DELETE,GET,OPTIONS,PUT'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Auth'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior": "when_no_match",
+          "type": "mock"
+        }
+      }
+    },
+    "/migrate": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "BAD.*": {
+              "statusCode": "400"
+            },
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,x-api-key,x-amz-security-token'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              }
+            },
+            "INT.*": {
+              "statusCode": "500"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{ \"method\": \"$context.httpMethod\", \n  \"resource\": \"$context.resourcePath\"}"
+          },
+          "uri": "{{apiEndpointUri}}",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "options": {
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Methods": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Headers": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                 "method.response.header.Access-Control-Allow-Origin": "'*'"
               }
             }
